@@ -7,6 +7,10 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { LessorModule } from './lessor/lessor.module';
+import { TenantModule } from './tenant/tenant.module';
+import { FlatModule } from './flat/flat.module';
+import { FlatImageModule } from './flat_image/flat_image.module';
 
 @Module({
   imports: [
@@ -29,6 +33,10 @@ import { AppService } from './app.service';
         synchronize: true,
       }),
     }),
+    LessorModule,
+    TenantModule,
+    FlatModule,
+    FlatImageModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

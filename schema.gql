@@ -2,6 +2,49 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Lessor {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  state: String!
+  uuid: String!
+  lastName: String!
+  firstName: String!
+  gender: String!
+  email: String!
+  phone: String!
+  address: String!
+  city: String!
+  profileLink: String!
+  type: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type LessorSetOutput {
+  lessor: Lessor!
+}
+
 type Query {
   sayHello: String!
+  getLessor(id: String!): LessorSetOutput!
+}
+
+type Mutation {
+  createLessor(input: LessorCreateInput!): LessorSetOutput!
+}
+
+input LessorCreateInput {
+  uuid: String!
+  firstName: String!
+  lastName: String!
+  gender: String
+  email: String
+  phone: String!
+  address: String
+  city: String!
+  type: String!
 }
