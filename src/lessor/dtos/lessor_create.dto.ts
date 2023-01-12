@@ -1,38 +1,21 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Lessor } from '../models/lessor.model';
+import { UserType } from 'src/common/enum/types.enum';
+import { LessorUpdateInput, LessorUpdateOutput } from './lessor_update.dto';
 
 @InputType()
-export class LessorCreateInput {
+export class LessorCreateInput extends LessorUpdateInput {
   @Field(() => String)
   uuid: string;
 
-  @Field(() => String)
-  firstName: string;
+  @Field(() => UserType)
+  type: UserType;
 
   @Field(() => String)
-  lastName: string;
-
-  @Field(() => String, { nullable: true })
-  gender: string;
-
-  @Field(() => String, { nullable: true })
-  email: string;
-
-  @Field(() => String)
-  phone: string;
-
-  @Field(() => String, { nullable: true })
-  address: string;
-
-  @Field(() => String)
-  city: string;
-
-  @Field(() => String)
-  type: string;
+  primaryPhoneNumber: string;
 }
 
 @ObjectType()
-export class LessorSetOutput {
-  @Field(() => Lessor)
-  lessor: Lessor;
-}
+export class LessorCreateOutput extends LessorUpdateOutput {}
+
+@ObjectType()
+export class LessorOutput extends LessorCreateOutput {}

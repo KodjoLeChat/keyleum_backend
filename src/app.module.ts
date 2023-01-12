@@ -11,10 +11,13 @@ import { LessorModule } from './lessor/lessor.module';
 import { TenantModule } from './tenant/tenant.module';
 import { FlatModule } from './flat/flat.module';
 import { FlatImageModule } from './flat_image/flat_image.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
@@ -37,6 +40,7 @@ import { FlatImageModule } from './flat_image/flat_image.module';
     TenantModule,
     FlatModule,
     FlatImageModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

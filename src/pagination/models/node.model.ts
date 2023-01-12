@@ -1,4 +1,4 @@
-import { Field, ID, InterfaceType } from '@nestjs/graphql';
+import { Field, ID, Int, InterfaceType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -13,6 +13,10 @@ export abstract class Node extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Field(() => Int)
+  @Column({ default: 0 })
+  version: number;
+
   @Field(() => Date)
   @CreateDateColumn()
   createdAt: Date;
@@ -20,8 +24,4 @@ export abstract class Node extends BaseEntity {
   @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Field(() => String)
-  @Column({ default: 'enabled' })
-  state: string;
 }

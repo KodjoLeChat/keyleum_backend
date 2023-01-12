@@ -1,5 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { LessorSetOutput } from '../dtos/lessor_create.dto';
+import { LessorOutput } from '../dtos/lessor_create.dto';
+import { Lessors } from '../dtos/lessor_update.dto';
 import { LessorService } from '../lessor.service';
 import { Lessor } from '../models/lessor.model';
 
@@ -7,9 +8,14 @@ import { Lessor } from '../models/lessor.model';
 export class LessorQueriesResolver {
   constructor(private readonly lessorService: LessorService) {}
 
-  @Query(() => LessorSetOutput)
-  async getLessor(@Args('id') id: string): Promise<LessorSetOutput> {
+  @Query(() => LessorOutput, { nullable: true })
+  async lessor_by_pk(@Args('id') id: string) {
     const lessor = await this.lessorService.getLessor(id);
     return lessor;
+  }
+
+  @Query(() => Lessors)
+  async lessors() {
+    return await this.lessorService.getAllLessor();
   }
 }
