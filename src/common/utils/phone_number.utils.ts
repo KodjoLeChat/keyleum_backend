@@ -1,6 +1,7 @@
 export class PhoneNumberUtils {
-  static isValidPhoneNumberForChad(phoneNumber: string): boolean {
-    const phoneNumberRegex = /^\+235[0-9]{8,10}$/;
-    return phoneNumberRegex.test(phoneNumber);
+  static isValidPhoneNumber(phone: string): boolean {
+    // Regular expression for vérify the international format
+    const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+    return phoneRegex.test(phone);
   }
 }

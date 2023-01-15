@@ -1,15 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { UserType } from 'src/common/enum/types.enum';
-import { LessorUpdateInput } from './lessor_update.dto';
+import { TenantUpdateInput } from './tenant_update.dto';
 
 @InputType()
-export class LessorCreateInput extends LessorUpdateInput {
+export class TenantCreateInput extends TenantUpdateInput {
   @Field(() => String)
   uuid: string;
 
-  @Field(() => UserType)
-  type: UserType;
-
   @Field(() => String)
   primaryPhoneNumber: string;
+
+  @Field(() => UserType)
+  type: UserType;
 }
