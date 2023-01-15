@@ -6,16 +6,8 @@ import { UserState } from 'src/common/enum/states.enum';
 import { FirebaseService } from 'src/common/services/firebase.service';
 import { PhoneNumberUtils } from 'src/common/utils/phone_number.utils';
 import { Repository } from 'typeorm';
-import {
-  LessorCreateInput,
-  LessorCreateOutput,
-} from './dtos/lessor_create.dto';
-import { LessorDeleteOutPut } from './dtos/lessor_delete.dto';
-import {
-  Lessors,
-  LessorUpdateInput,
-  LessorUpdateOutput,
-} from './dtos/lessor_update.dto';
+import { LessorCreateInput } from './dtos/lessor_create.dto';
+import { LessorUpdateInput } from './dtos/lessor_update.dto';
 import { Lessor } from './models/lessor.model';
 
 @Injectable()
@@ -37,10 +29,10 @@ export class LessorService {
     return lessor;
   }
 
-  async deleteLessor(id: string): Promise<LessorDeleteOutPut> {
+  async deleteLessor(id: string): Promise<Lessor> {
     let lessor = await this.getById(id);
     if (!lessor) {
-      return { lessor };
+      return lessor;
     }
     lessor.state = UserState.deleted;
     /* add #uuid#deleted at the end of the number and potentially of the email to mean that the user was deleted and like that, 
@@ -57,16 +49,13 @@ export class LessorService {
     lessor = await this.lessorRepository.save(lessor);
     // emit event for delete the user flats and delete the user from firebase.
     this.eventEmitter.emit(events.LESSOR_DELETED, lessor);
-    return { lessor: lessor };
+    return lessor;
   }
 
-  async updateLessor(
-    id: string,
-    input: LessorUpdateInput,
-  ): Promise<LessorUpdateOutput> {
+  async updateLessor(id: string, input: LessorUpdateInput): Promise<Lessor> {
     let lessor = await this.getById(id);
     if (!lessor) {
-      return { lessor: lessor };
+      return lessor;
     }
     lessor.firstName = input.firstName;
     lessor.lastName = input.lastName;
@@ -79,33 +68,33 @@ export class LessorService {
     lessor.version = lessor.version + 1;
 
     lessor = await this.lessorRepository.save(lessor);
-    return { lessor: lessor };
+    return lessor;
   }
 
-  async createLessor(input: LessorCreateInput): Promise<LessorCreateOutput> {
+  async createLessor(input: LessorCreateInput): Promise<Lessor> {
     let lessor = this.lessorRepository.create(input);
-    const isValid = PhoneNumberUtils.isValidPhoneNumberForChad(
+    const isValid = PhoneNumberUtils.isValidPhoneNumber(
       lessor.primaryPhoneNumber,
     );
     const userExist = await FirebaseService.userExists(lessor.uuid);
     if (!isValid || !userExist) {
-      return { lessor: null };
+      return null;
     }
     lessor = await lessor.save();
-    return { lessor };
+    return lessor;
   }
 
-  async getLessor(id: string): Promise<LessorCreateOutput | null> {
+  async getLessor(id: string): Promise<Lessor> {
     const lessor = await this.getById(id);
-    return { lessor };
+    return lessor;
   }
 
-  async getAllLessor(): Promise<Lessors> {
+  async getAllLessor(): Promise<Lessor[]> {
     const lessors = await this.lessorRepository
       .createQueryBuilder('lessor')
       .where('lessor.state <> :state', { state: UserState.deleted })
       .getMany();
 
-    return { lessors };
+    return lessors;
   }
 }

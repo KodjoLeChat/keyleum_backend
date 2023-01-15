@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Gender } from 'src/common/enum/gender.enum';
 
 @InputType()
-export class LessorUpdateInput {
+export class TenantUpdateInput {
   @Field(() => String)
   firstName: string;
 
@@ -14,12 +14,6 @@ export class LessorUpdateInput {
 
   @Field(() => String, { nullable: true })
   email: string;
-
-  @Field(() => String, { nullable: true })
-  secondaryPhoneNumber?: string;
-
-  @Field(() => String, { nullable: true })
-  whatsAppPhoneNumber?: string;
 
   @Field(() => String, { nullable: true })
   address: string;

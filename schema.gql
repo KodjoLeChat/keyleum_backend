@@ -43,36 +43,38 @@ enum UserState {
   deleted
 }
 
-type LessorUpdateOutput {
-  lessor: Lessor
-}
-
-type Lessors {
-  lessors: [Lessor!]!
-}
-
-type LessorCreateOutput {
-  lessor: Lessor
-}
-
-type LessorOutput {
-  lessor: Lessor
-}
-
-type LessorDeleteOutPut {
-  lessor: Lessor
+type Tenant {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  uuid: String!
+  lastName: String!
+  firstName: String!
+  gender: Gender!
+  email: String
+  primaryPhoneNumber: String!
+  address: String
+  city: String
+  profileLink: String
+  type: UserType!
+  state: UserState!
 }
 
 type Query {
-  sayHello: String!
-  lessor_by_pk(id: String!): LessorOutput
-  lessors: Lessors!
+  lessor(id: String!): Lessor
+  lessors: [Lessor!]!
+  tenant(id: String!): Tenant
+  tenants: [Tenant!]!
 }
 
 type Mutation {
-  createLessor(input: LessorCreateInput!): LessorCreateOutput
-  updateLessor(id: String!, input: LessorUpdateInput!): LessorUpdateOutput
-  deleteLessor(id: String!): LessorDeleteOutPut
+  insert_lessor(input: LessorCreateInput!): Lessor
+  update_lessor(id: String!, input: LessorUpdateInput!): Lessor
+  delete_lessor(id: String!): Lessor
+  insert_tenant(input: TenantCreateInput!): Tenant
+  update_tenant(id: String!, input: TenantUpdateInput!): Tenant
+  delete_tenant(id: String!): Tenant
 }
 
 input LessorCreateInput {
@@ -97,6 +99,29 @@ input LessorUpdateInput {
   email: String
   secondaryPhoneNumber: String
   whatsAppPhoneNumber: String
+  address: String
+  city: String!
+  profileLink: String
+}
+
+input TenantCreateInput {
+  firstName: String!
+  lastName: String!
+  gender: Gender
+  email: String
+  address: String
+  city: String!
+  profileLink: String
+  uuid: String!
+  primaryPhoneNumber: String!
+  type: UserType!
+}
+
+input TenantUpdateInput {
+  firstName: String!
+  lastName: String!
+  gender: Gender
+  email: String
   address: String
   city: String!
   profileLink: String
