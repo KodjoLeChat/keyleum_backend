@@ -4,19 +4,22 @@
 
 type Lessor {
   id: ID!
+  version: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
-  state: String!
   uuid: String!
   lastName: String!
   firstName: String!
-  gender: String!
-  email: String!
-  phone: String!
-  address: String!
-  city: String!
-  profileLink: String!
-  type: String!
+  gender: Gender!
+  email: String
+  primaryPhoneNumber: String!
+  address: String
+  city: String
+  profileLink: String
+  type: UserType!
+  state: UserState!
+  secondaryPhoneNumber: String
+  whatsAppPhoneNumber: String
 }
 
 """
@@ -24,27 +27,77 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type LessorSetOutput {
-  lessor: Lessor!
+enum Gender {
+  male
+  female
+  unknown
+}
+
+enum UserType {
+  lessor
+  tenant
+}
+
+enum UserState {
+  enabled
+  deleted
+}
+
+type LessorUpdateOutput {
+  lessor: Lessor
+}
+
+type Lessors {
+  lessors: [Lessor!]!
+}
+
+type LessorCreateOutput {
+  lessor: Lessor
+}
+
+type LessorOutput {
+  lessor: Lessor
+}
+
+type LessorDeleteOutPut {
+  lessor: Lessor
 }
 
 type Query {
   sayHello: String!
-  getLessor(id: String!): LessorSetOutput!
+  lessor_by_pk(id: String!): LessorOutput
+  lessors: Lessors!
 }
 
 type Mutation {
-  createLessor(input: LessorCreateInput!): LessorSetOutput!
+  createLessor(input: LessorCreateInput!): LessorCreateOutput
+  updateLessor(id: String!, input: LessorUpdateInput!): LessorUpdateOutput
+  deleteLessor(id: String!): LessorDeleteOutPut
 }
 
 input LessorCreateInput {
-  uuid: String!
   firstName: String!
   lastName: String!
-  gender: String
+  gender: Gender
   email: String
-  phone: String!
+  secondaryPhoneNumber: String
+  whatsAppPhoneNumber: String
   address: String
   city: String!
-  type: String!
+  profileLink: String
+  uuid: String!
+  type: UserType!
+  primaryPhoneNumber: String!
+}
+
+input LessorUpdateInput {
+  firstName: String!
+  lastName: String!
+  gender: Gender
+  email: String
+  secondaryPhoneNumber: String
+  whatsAppPhoneNumber: String
+  address: String
+  city: String!
+  profileLink: String
 }

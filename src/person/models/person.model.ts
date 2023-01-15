@@ -1,7 +1,15 @@
-import { Field, InterfaceType } from '@nestjs/graphql';
+import { Field, InterfaceType, registerEnumType } from '@nestjs/graphql';
+import { Gender } from 'src/common/enum/gender.enum';
+import { UserState } from 'src/common/enum/states.enum';
+import { UserType } from 'src/common/enum/types.enum';
 import { Node } from 'src/pagination/models/node.model';
 import { Column } from 'typeorm';
 
+registerEnumType(UserState, { name: 'UserState' });
+
+registerEnumType(UserType, { name: 'UserType' });
+
+registerEnumType(Gender, { name: 'Gender' });
 @InterfaceType()
 export abstract class Person extends Node {
   @Field(() => String)
@@ -16,31 +24,35 @@ export abstract class Person extends Node {
   @Column()
   firstName: string;
 
-  @Field(() => String)
-  @Column({ default: 'unknown' })
-  gender: string;
+  @Field(() => Gender)
+  @Column({ default: Gender.unknown })
+  gender: Gender;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ unique: true, nullable: true })
-  email: string;
+  email?: string;
 
   @Field(() => String)
   @Column({ unique: true })
-  phone: string;
+  primaryPhoneNumber: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  address: string;
+  address?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  city: string;
+  city?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  profileLink: string;
+  profileLink?: string;
 
-  @Field(() => String)
+  @Field(() => UserType)
   @Column()
-  type: string;
+  type: UserType;
+
+  @Field(() => UserState)
+  @Column({ default: UserState.enabled })
+  state: UserState;
 }
