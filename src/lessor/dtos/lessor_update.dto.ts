@@ -19,7 +19,7 @@ export class LessorUpdateInput {
   secondaryPhoneNumber?: string;
 
   @Field(() => String, { nullable: true })
-  whatsAppPhoneNumber?: string;
+  whatsAppNumber?: string;
 
   @Field(() => String, { nullable: true })
   address: string;
@@ -28,5 +28,5 @@ export class LessorUpdateInput {
   city: string;
 
   @Field(() => String, { nullable: true })
-  profileLink: string;
+  profileLink?: string;
 }

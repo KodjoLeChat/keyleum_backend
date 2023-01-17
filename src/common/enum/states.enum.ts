@@ -18,3 +18,14 @@ export enum UserState {
   enabled = 'enabled',
   deleted = 'deleted',
 }
+
+export enum OrganisationState {
+  enabled = 'enabled',
+  deleted = 'deleted',
+}
+
+export enum OrganisationCodeState {
+  used = 'used',
+  unused = 'unused',
+  deleted = 'deleted',
+}

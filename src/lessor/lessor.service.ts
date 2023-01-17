@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { events } from 'src/common/constants/events.constants';
 import { UserState } from 'src/common/enum/states.enum';
 import { FirebaseService } from 'src/common/services/firebase.service';
 import { PhoneNumberUtils } from 'src/common/utils/phone_number.utils';
+import { OrganisationService } from 'src/organisation/organisation.service';
 import { Repository } from 'typeorm';
 import { LessorCreateInput } from './dtos/lessor_create.dto';
 import { LessorUpdateInput } from './dtos/lessor_update.dto';
@@ -14,8 +15,12 @@ import { Lessor } from './models/lessor.model';
 export class LessorService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
+
     @InjectRepository(Lessor)
     private readonly lessorRepository: Repository<Lessor>,
+
+    @Inject(forwardRef(() => OrganisationService))
+    private readonly organisationService: OrganisationService,
   ) {}
 
   private async getById(id: string): Promise<Lessor> {
@@ -59,19 +64,25 @@ export class LessorService {
     }
     lessor.firstName = input.firstName;
     lessor.lastName = input.lastName;
-    lessor.email = input.email;
-    lessor.secondaryPhoneNumber = input.secondaryPhoneNumber;
-    lessor.whatsAppPhoneNumber = input.whatsAppPhoneNumber;
-    lessor.address = input.address;
     lessor.city = input.city;
     lessor.gender = input.gender;
     lessor.version = lessor.version + 1;
+    if (input.email) lessor.email = input.email;
+    if (input.secondaryPhoneNumber)
+      lessor.secondaryPhoneNumber = input.secondaryPhoneNumber;
+    if (input.whatsAppNumber) lessor.whatsAppNumber = input.whatsAppNumber;
+    if (input.address) lessor.address = input.address;
+    if (input.profileLink) lessor.profileLink = input.profileLink;
 
     lessor = await this.lessorRepository.save(lessor);
     return lessor;
   }
 
   async createLessor(input: LessorCreateInput): Promise<Lessor> {
+    const organisation = await this.organisationService.getOrganisation(
+      input.organisationId,
+    );
+    if (!organisation) return null;
     let lessor = this.lessorRepository.create(input);
     const isValid = PhoneNumberUtils.isValidPhoneNumber(
       lessor.primaryPhoneNumber,
@@ -80,6 +91,7 @@ export class LessorService {
     if (!isValid || !userExist) {
       return null;
     }
+    lessor.organisation = organisation;
     lessor = await lessor.save();
     return lessor;
   }

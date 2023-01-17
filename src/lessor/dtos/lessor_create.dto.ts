@@ -7,6 +7,9 @@ export class LessorCreateInput extends LessorUpdateInput {
   @Field(() => String)
   uuid: string;
 
+  @Field(() => String)
+  organisationId: string;
+
   @Field(() => UserType)
   type: UserType;
 

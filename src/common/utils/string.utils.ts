@@ -11,4 +11,27 @@ export class StringUtils {
     }
     return result;
   }
+
+  static randomString(str: string, length: number): string {
+    let result = '';
+    const characters = str.split('');
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters[Math.floor(Math.random() * charactersLength)];
+    }
+    return result;
+  }
+
+  static shuffleString(str: string) {
+    const a = str.split(''),
+      n = a.length;
+
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+    return a.join('');
+  }
 }
