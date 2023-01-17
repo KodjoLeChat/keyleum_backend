@@ -46,11 +46,11 @@ export class TenantService {
     tenant.firstName = input.firstName;
     tenant.lastName = input.lastName;
     tenant.gender = input.gender;
-    tenant.address = input.address;
-    tenant.city = input.city;
-    tenant.email = input.email;
-    tenant.profileLink = input.profileLink;
     tenant.version += 1;
+    if (input.address) tenant.address = input.address;
+    if (input.city) tenant.city = input.city;
+    if (input.email) tenant.email = input.email;
+    if (input.profileLink) tenant.profileLink = input.profileLink;
 
     tenant = await tenant.save();
     return tenant;

@@ -2,6 +2,56 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type OrganisationCode {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  code: String!
+  state: OrganisationCodeState!
+  organisationId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum OrganisationCodeState {
+  used
+  unused
+  deleted
+}
+
+type Organisation {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String
+  address: String!
+  city: String!
+  email: String
+  primaryPhoneNumber: String!
+  secondaryPhoneNumber: String
+  whatsAppNumber: String
+  type: OrganisationType!
+  state: OrganisationState!
+}
+
+enum OrganisationType {
+  flat
+  hotel
+  commoncourse
+  inn
+  concession
+}
+
+enum OrganisationState {
+  enabled
+  deleted
+}
+
 type Lessor {
   id: ID!
   version: Int!
@@ -19,13 +69,9 @@ type Lessor {
   type: UserType!
   state: UserState!
   secondaryPhoneNumber: String
-  whatsAppPhoneNumber: String
+  whatsAppNumber: String
+  organisationId: String
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 enum Gender {
   male
@@ -64,14 +110,20 @@ type Tenant {
 type Query {
   lessor(id: String!): Lessor
   lessors: [Lessor!]!
+  organisation(id: String!): Organisation
+  organisations: [Organisation!]!
   tenant(id: String!): Tenant
   tenants: [Tenant!]!
+  organisation_code(organisationId: String!): OrganisationCode
+  organisation_codes: [OrganisationCode!]!
 }
 
 type Mutation {
   insert_lessor(input: LessorCreateInput!): Lessor
   update_lessor(id: String!, input: LessorUpdateInput!): Lessor
   delete_lessor(id: String!): Lessor
+  insert_organisation(organisation: OrganisationInsertInput!, lessor: LessorCreateInput!): Organisation!
+  update_organisation(id: String!, input: OrganisationUpdateInput!): Organisation
   insert_tenant(input: TenantCreateInput!): Tenant
   update_tenant(id: String!, input: TenantUpdateInput!): Tenant
   delete_tenant(id: String!): Tenant
@@ -83,11 +135,12 @@ input LessorCreateInput {
   gender: Gender
   email: String
   secondaryPhoneNumber: String
-  whatsAppPhoneNumber: String
+  whatsAppNumber: String
   address: String
   city: String!
   profileLink: String
   uuid: String!
+  organisationId: String!
   type: UserType!
   primaryPhoneNumber: String!
 }
@@ -98,10 +151,31 @@ input LessorUpdateInput {
   gender: Gender
   email: String
   secondaryPhoneNumber: String
-  whatsAppPhoneNumber: String
+  whatsAppNumber: String
   address: String
   city: String!
   profileLink: String
+}
+
+input OrganisationInsertInput {
+  type: OrganisationType!
+  name: String
+  address: String!
+  city: String!
+  email: String
+  secondaryPhoneNumber: String
+  whatsAppNumber: String
+  primaryPhoneNumber: String
+}
+
+input OrganisationUpdateInput {
+  type: OrganisationType!
+  name: String
+  address: String!
+  city: String!
+  email: String
+  secondaryPhoneNumber: String
+  whatsAppNumber: String
 }
 
 input TenantCreateInput {

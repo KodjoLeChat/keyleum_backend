@@ -1,7 +1,9 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { FlatState } from 'src/common/enum/states.enum';
+import { OrganisationType } from 'src/common/enum/types.enum';
 import { FlatImages } from 'src/flat_image/models/flat_image.model';
 import { Lessor } from 'src/lessor/models/lessor.model';
+import { Organisation } from 'src/organisation/models/organisation.model';
 import { Node } from 'src/pagination/models/node.model';
 import {
   Column,
@@ -32,6 +34,10 @@ export class Flat extends Node {
   @Column()
   price: number;
 
+  @Field(() => OrganisationType)
+  @Column()
+  type: OrganisationType;
+
   @Field(() => String)
   @Column()
   title: string;
@@ -59,6 +65,15 @@ export class Flat extends Node {
   @JoinColumn()
   lessor: Lessor;
 
+  @Field(() => String)
   @RelationId((self: Flat) => self.lessor)
-  readonly LessorId: Lessor['id'];
+  readonly lessorId: Lessor['id'];
+
+  @ManyToOne(() => Organisation, (organisation) => organisation.flats)
+  @JoinColumn()
+  organisation: Organisation;
+
+  @Field(() => String)
+  @RelationId((self: Flat) => self.organisation)
+  readonly organisationId: Lessor['id'];
 }

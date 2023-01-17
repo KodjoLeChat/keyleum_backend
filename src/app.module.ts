@@ -12,6 +12,8 @@ import { FlatModule } from './flat/flat.module';
 import { FlatImageModule } from './flat_image/flat_image.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EventsModule } from './events/events.module';
+import { OrganisationModule } from './organisation/organisation.module';
+import { OrganisationCodeModule } from './organisation_code/organisation_code.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { EventsModule } from './events/events.module';
     FlatModule,
     FlatImageModule,
     EventsModule,
+    OrganisationModule,
+    OrganisationCodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
