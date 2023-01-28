@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrganisationCodeState } from 'src/common/enum/states.enum';
+import { FirebaseService } from 'src/common/services/firebase.service';
 import { StringUtils } from 'src/common/utils/string.utils';
 import { OrganisationService } from 'src/organisation/organisation.service';
 import { Repository } from 'typeorm';
@@ -73,6 +74,10 @@ export class OrganisationCodeService {
   }
 
   async getOrganisationCode(organisationId: string): Promise<OrganisationCode> {
+    const users = await FirebaseService.users();
+    users.users.map(async (user) => {
+      console.log(user);
+    });
     const organisationCode = await this.insertOrganisationCode(organisationId);
     return organisationCode;
   }

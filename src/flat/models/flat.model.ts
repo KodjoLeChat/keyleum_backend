@@ -1,20 +1,24 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { FlatState } from 'src/common/enum/states.enum';
-import { OrganisationType } from 'src/common/enum/types.enum';
+import { OrganisationType, PaimentType } from 'src/common/enum/types.enum';
 import { FlatImages } from 'src/flat_image/models/flat_image.model';
 import { Lessor } from 'src/lessor/models/lessor.model';
 import { Organisation } from 'src/organisation/models/organisation.model';
 import { Node } from 'src/pagination/models/node.model';
+import { Tenant } from 'src/tenant/models/tenant.model';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   RelationId,
 } from 'typeorm';
 
 registerEnumType(FlatState, { name: 'FlatState' });
+
+registerEnumType(PaimentType, { name: 'PaimentType' });
 @Entity()
 @ObjectType()
 export class Flat extends Node {
@@ -34,6 +38,10 @@ export class Flat extends Node {
   @Column()
   price: number;
 
+  @Field(() => PaimentType)
+  @Column()
+  paimentType: PaimentType;
+
   @Field(() => OrganisationType)
   @Column()
   type: OrganisationType;
@@ -42,17 +50,17 @@ export class Flat extends Node {
   @Column()
   title: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  description: string;
+  description?: string;
 
   @Field(() => String)
   @Column({ type: 'date' })
   startAt: Date;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'date', nullable: true })
-  endAt: Date;
+  endAt?: Date;
 
   @Field(() => FlatState)
   @Column({ default: FlatState.enabled })
@@ -76,4 +84,7 @@ export class Flat extends Node {
   @Field(() => String)
   @RelationId((self: Flat) => self.organisation)
   readonly organisationId: Lessor['id'];
+
+  @ManyToMany(() => Tenant, (tenant) => tenant.flats)
+  tenants?: Tenant[];
 }

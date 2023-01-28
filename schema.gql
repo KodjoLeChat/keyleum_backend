@@ -37,6 +37,7 @@ type Organisation {
   whatsAppNumber: String
   type: OrganisationType!
   state: OrganisationState!
+  lessors: [Lessor!]
 }
 
 enum OrganisationType {
@@ -45,6 +46,7 @@ enum OrganisationType {
   commoncourse
   inn
   concession
+  space
 }
 
 enum OrganisationState {
@@ -70,7 +72,9 @@ type Lessor {
   state: UserState!
   secondaryPhoneNumber: String
   whatsAppNumber: String
+  status: LessorStatus!
   organisationId: String
+  organisation: Organisation
 }
 
 enum Gender {
@@ -87,6 +91,11 @@ enum UserType {
 enum UserState {
   enabled
   deleted
+}
+
+enum LessorStatus {
+  admin
+  member
 }
 
 type Tenant {
@@ -107,8 +116,44 @@ type Tenant {
   state: UserState!
 }
 
+type Flat {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  address: String!
+  city: String!
+  quarter: String!
+  price: Int!
+  paimentType: PaimentType!
+  type: OrganisationType!
+  title: String!
+  description: String
+  startAt: String!
+  endAt: String
+  state: FlatState!
+  lessorId: String!
+  organisationId: String!
+}
+
+enum PaimentType {
+  permonthly
+  perhourly
+  peryearly
+  perdaily
+}
+
+enum FlatState {
+  enabled
+  disabled
+  deleted
+  archived
+  rented
+}
+
 type Query {
   lessor(id: String!): Lessor
+  lessor_by_uuid(uuid: String!): Lessor
   lessors: [Lessor!]!
   organisation(id: String!): Organisation
   organisations: [Organisation!]!
@@ -127,6 +172,7 @@ type Mutation {
   insert_tenant(input: TenantCreateInput!): Tenant
   update_tenant(id: String!, input: TenantUpdateInput!): Tenant
   delete_tenant(id: String!): Tenant
+  insert_flat(input: FlatInsertInput!): Flat
 }
 
 input LessorCreateInput {
@@ -199,4 +245,19 @@ input TenantUpdateInput {
   address: String
   city: String!
   profileLink: String
+}
+
+input FlatInsertInput {
+  address: String!
+  city: String!
+  quarter: String!
+  price: Int!
+  paimentType: PaimentType!
+  title: String!
+  description: String
+  startAt: String!
+  endAt: String
+  images: [String!]!
+  organisationId: String!
+  lessorId: String!
 }

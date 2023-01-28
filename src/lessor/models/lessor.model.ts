@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { LessorStatus } from 'src/common/enum/status.enum';
 import { Flat } from 'src/flat/models/flat.model';
 import { Organisation } from 'src/organisation/models/organisation.model';
 import { Person } from 'src/person/models/person.model';
@@ -11,6 +12,7 @@ import {
   RelationId,
 } from 'typeorm';
 
+registerEnumType(LessorStatus, { name: 'LessorStatus' });
 @Entity()
 @ObjectType()
 export class Lessor extends Person {
@@ -21,6 +23,10 @@ export class Lessor extends Person {
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   whatsAppNumber?: string;
+
+  @Field(() => LessorStatus)
+  @Column({ default: LessorStatus.member })
+  status: LessorStatus;
 
   @OneToMany(() => Flat, (target) => target.lessor)
   flats: Flat[];

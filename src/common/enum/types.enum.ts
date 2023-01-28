@@ -9,4 +9,12 @@ export enum OrganisationType {
   commoncourse = 'commoncourse',
   inn = 'inn',
   concession = 'concession',
+  space = 'space',
+}
+
+export enum PaimentType {
+  permonthly = 'permonthly',
+  perhourly = 'perhourly',
+  peryearly = 'peryearly',
+  perdaily = 'perdaily',
 }

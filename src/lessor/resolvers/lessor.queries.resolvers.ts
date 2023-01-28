@@ -12,6 +12,12 @@ export class LessorQueriesResolver {
     return lessor;
   }
 
+  @Query(() => Lessor, { nullable: true })
+  async lessor_by_uuid(@Args('uuid') uuid: string) {
+    const lessor = await this.lessorService.getLessorByUuid(uuid);
+    return lessor;
+  }
+
   @Query(() => [Lessor])
   async lessors() {
     return await this.lessorService.getAllLessor();
