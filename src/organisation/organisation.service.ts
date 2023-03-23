@@ -112,4 +112,9 @@ export class OrganisationService {
     organisation = await organisation.save();
     return organisation;
   }
+
+  async getLessor(lessorId: string) {
+    const lessor = await this.lessorService.getLessor(lessorId);
+    return lessor;
+  }
 }

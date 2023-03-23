@@ -15,4 +15,9 @@ export class FirebaseService {
     if (!userExists) return;
     await admin.auth().deleteUser(uuid);
   }
+
+  static async users() {
+    const users = await admin.auth().listUsers();
+    return users;
+  }
 }

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrganisationCodeState } from 'src/common/enum/states.enum';
+import { FirebaseService } from 'src/common/services/firebase.service';
 import { StringUtils } from 'src/common/utils/string.utils';
 import { OrganisationService } from 'src/organisation/organisation.service';
 import { Repository } from 'typeorm';
@@ -52,7 +53,7 @@ export class OrganisationCodeService {
   private async getById(id: string): Promise<OrganisationCode> {
     const organisationCode = await this.organisationCodeRepository
       .createQueryBuilder('organisationCode')
-      .where('id = :id AND organisationCode.state = :state', {
+      .where('organisationCode.id = :id AND organisationCode.state = :state', {
         id: id,
         state: OrganisationCodeState.unused,
       })
@@ -64,7 +65,7 @@ export class OrganisationCodeService {
   private async getByCode(code: number): Promise<OrganisationCode> {
     const organisationCode = await this.organisationCodeRepository
       .createQueryBuilder('organisationCode')
-      .where('code = :code', {
+      .where('organisationCode.code = :code', {
         code: code,
       })
       .getOne();
@@ -72,8 +73,32 @@ export class OrganisationCodeService {
     return organisationCode;
   }
 
+  private async getByOrganisationId(
+    organisationId: string,
+  ): Promise<OrganisationCode> {
+    const organisationCode = await this.organisationCodeRepository
+      .createQueryBuilder('organisationCode')
+      .where(
+        'organisationCode.organisationId = :organisationId AND organisationCode.state = :state',
+        {
+          organisationId: organisationId,
+          state: OrganisationCodeState.unused,
+        },
+      )
+      .getOne();
+
+    return organisationCode;
+  }
+
   async getOrganisationCode(organisationId: string): Promise<OrganisationCode> {
-    const organisationCode = await this.insertOrganisationCode(organisationId);
+    const users = await FirebaseService.users();
+    users.users.map(async (user) => {
+      console.log(user);
+    });
+    let organisationCode = await this.getByOrganisationId(organisationId);
+    if (!organisationCode) {
+      organisationCode = await this.insertOrganisationCode(organisationId);
+    }
     return organisationCode;
   }
 

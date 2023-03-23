@@ -34,6 +34,17 @@ export class LessorService {
     return lessor;
   }
 
+  private async getByUuid(uuid: string): Promise<Lessor> {
+    const lessor = await this.lessorRepository
+      .createQueryBuilder('lessor')
+      .where('lessor.uuid = :uuid AND lessor.state <> :state', {
+        uuid,
+        state: UserState.deleted,
+      })
+      .getOne();
+    return lessor;
+  }
+
   async deleteLessor(id: string): Promise<Lessor> {
     let lessor = await this.getById(id);
     if (!lessor) {
@@ -101,10 +112,32 @@ export class LessorService {
     return lessor;
   }
 
+  async getLessorByUuid(uuid: string): Promise<Lessor> {
+    const lessor = await this.getByUuid(uuid);
+    return lessor;
+  }
+
   async getAllLessor(): Promise<Lessor[]> {
     const lessors = await this.lessorRepository
       .createQueryBuilder('lessor')
       .where('lessor.state <> :state', { state: UserState.deleted })
+      .getMany();
+
+    return lessors;
+  }
+
+  async getAllLessorByOrganisationId(
+    organisationId: string,
+  ): Promise<Lessor[]> {
+    const lessors = await this.lessorRepository
+      .createQueryBuilder('lessor')
+      .where(
+        'lessor.organisation.id = :organisationId AND lessor.state <> :state',
+        {
+          organisationId,
+          state: UserState.deleted,
+        },
+      )
       .getMany();
 
     return lessors;

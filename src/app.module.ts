@@ -14,6 +14,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EventsModule } from './events/events.module';
 import { OrganisationModule } from './organisation/organisation.module';
 import { OrganisationCodeModule } from './organisation_code/organisation_code.module';
+import { TenantFlatModule } from './tenant_flat/tenant_flat.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { OrganisationCodeModule } from './organisation_code/organisation_code.mo
     EventsModule,
     OrganisationModule,
     OrganisationCodeModule,
+    TenantFlatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
