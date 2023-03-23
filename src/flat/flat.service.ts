@@ -32,6 +32,14 @@ export class FlatService {
     return flat;
   }
 
+  private async getFlats(): Promise<Flat[]> {
+    const flats = await this.flatRepository
+      .createQueryBuilder('flat')
+      .where('flat.state <> :state', { state: FlatState.deleted })
+      .getMany();
+    return flats;
+  }
+
   async deleteFlat(id: string) {
     let flat = await this.getById(id);
     if (!flat) return null;
@@ -46,8 +54,14 @@ export class FlatService {
     return flat;
   }
 
-  async insertFlat(input: FlatInsertInput): Promise<Flat> {
-    const { images, organisationId, lessorId, ...imp } = input;
+  async insertFlat(lessorId: string, input: FlatInsertInput): Promise<Flat> {
+    const { images, ...imp } = input;
+
+    const lessor = await this.organisationService.getLessor(lessorId);
+
+    if (!lessor) return null;
+
+    const organisationId = lessor.organisationId;
 
     const organisation = await this.organisationService.getOrganisation(
       organisationId,
@@ -55,14 +69,11 @@ export class FlatService {
 
     if (!organisation) return null;
 
-    const lessor = await this.organisationService.getLessor(lessorId);
-
-    if (!lessor) return null;
-
     let flat = this.flatRepository.create(imp);
 
     flat.organisation = organisation;
     flat.lessor = lessor;
+    flat.type = organisation.type;
     flat = await flat.save();
 
     const flatImages = await Promise.all(
@@ -73,5 +84,27 @@ export class FlatService {
 
     if (status) await this.deleteFlat(flat.id);
     return flat;
+  }
+
+  async getFlat(id: string): Promise<Flat> {
+    const flat = await this.getById(id);
+    if (!flat) return null;
+    return flat;
+  }
+
+  async getAllFlat(): Promise<Flat[]> {
+    const flats = await this.getFlats();
+    return flats;
+  }
+
+  async getFlatsByLessorId(lessorId: string): Promise<Flat[]> {
+    const flats = await this.flatRepository
+      .createQueryBuilder('flat')
+      .where('flat.lessorId = :lessorId AND flat.state <> :state', {
+        lessorId: lessorId,
+        state: FlatState.deleted,
+      })
+      .getMany();
+    return flats;
   }
 }

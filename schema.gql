@@ -74,6 +74,7 @@ type Lessor {
   whatsAppNumber: String
   status: LessorStatus!
   organisationId: String
+  flats: [Flat!]
   organisation: Organisation
 }
 
@@ -134,6 +135,7 @@ type Flat {
   state: FlatState!
   lessorId: String!
   organisationId: String!
+  images: [FlatImages!]
 }
 
 enum PaimentType {
@@ -151,6 +153,23 @@ enum FlatState {
   rented
 }
 
+type FlatImages {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  state: FlatImagesState!
+}
+
+enum FlatImagesState {
+  enabled
+  disabled
+  deleted
+  archived
+  rented
+}
+
 type Query {
   lessor(id: String!): Lessor
   lessor_by_uuid(uuid: String!): Lessor
@@ -159,6 +178,8 @@ type Query {
   organisations: [Organisation!]!
   tenant(id: String!): Tenant
   tenants: [Tenant!]!
+  flat(id: String!): Flat
+  flats: [Flat!]!
   organisation_code(organisationId: String!): OrganisationCode
   organisation_codes: [OrganisationCode!]!
 }
@@ -172,7 +193,7 @@ type Mutation {
   insert_tenant(input: TenantCreateInput!): Tenant
   update_tenant(id: String!, input: TenantUpdateInput!): Tenant
   delete_tenant(id: String!): Tenant
-  insert_flat(input: FlatInsertInput!): Flat
+  insert_flat(lessorId: String!, input: FlatInsertInput!): Flat
 }
 
 input LessorCreateInput {
@@ -189,6 +210,7 @@ input LessorCreateInput {
   organisationId: String!
   type: UserType!
   primaryPhoneNumber: String!
+  status: LessorStatus!
 }
 
 input LessorUpdateInput {
@@ -258,6 +280,4 @@ input FlatInsertInput {
   startAt: String!
   endAt: String
   images: [String!]!
-  organisationId: String!
-  lessorId: String!
 }

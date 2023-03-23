@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { LessorStatus } from 'src/common/enum/status.enum';
 import { UserType } from 'src/common/enum/types.enum';
 import { LessorUpdateInput } from './lessor_update.dto';
 
@@ -15,4 +16,7 @@ export class LessorCreateInput extends LessorUpdateInput {
 
   @Field(() => String)
   primaryPhoneNumber: string;
+
+  @Field(() => LessorStatus)
+  status: LessorStatus;
 }

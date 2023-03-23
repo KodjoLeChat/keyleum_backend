@@ -53,7 +53,7 @@ export class OrganisationCodeService {
   private async getById(id: string): Promise<OrganisationCode> {
     const organisationCode = await this.organisationCodeRepository
       .createQueryBuilder('organisationCode')
-      .where('id = :id AND organisationCode.state = :state', {
+      .where('organisationCode.id = :id AND organisationCode.state = :state', {
         id: id,
         state: OrganisationCodeState.unused,
       })
@@ -65,9 +65,26 @@ export class OrganisationCodeService {
   private async getByCode(code: number): Promise<OrganisationCode> {
     const organisationCode = await this.organisationCodeRepository
       .createQueryBuilder('organisationCode')
-      .where('code = :code', {
+      .where('organisationCode.code = :code', {
         code: code,
       })
+      .getOne();
+
+    return organisationCode;
+  }
+
+  private async getByOrganisationId(
+    organisationId: string,
+  ): Promise<OrganisationCode> {
+    const organisationCode = await this.organisationCodeRepository
+      .createQueryBuilder('organisationCode')
+      .where(
+        'organisationCode.organisationId = :organisationId AND organisationCode.state = :state',
+        {
+          organisationId: organisationId,
+          state: OrganisationCodeState.unused,
+        },
+      )
       .getOne();
 
     return organisationCode;
@@ -78,7 +95,10 @@ export class OrganisationCodeService {
     users.users.map(async (user) => {
       console.log(user);
     });
-    const organisationCode = await this.insertOrganisationCode(organisationId);
+    let organisationCode = await this.getByOrganisationId(organisationId);
+    if (!organisationCode) {
+      organisationCode = await this.insertOrganisationCode(organisationId);
+    }
     return organisationCode;
   }
 

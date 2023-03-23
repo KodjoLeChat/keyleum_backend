@@ -6,9 +6,9 @@ export class FlatInsertInput extends FlatUpdateInput {
   @Field(() => [String])
   images: string[];
 
-  @Field(() => String)
-  organisationId: string;
+  // @Field(() => String)
+  // organisationId: string;
 
-  @Field(() => String)
-  lessorId: string;
+  // @Field(() => String)
+  // lessorId: string;
 }

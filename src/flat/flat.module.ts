@@ -7,6 +7,7 @@ import { OrganisationModule } from 'src/organisation/organisation.module';
 import { FlatService } from './flat.service';
 import { Flat } from './models/flat.model';
 import { FlatMutationResolver } from './resolvers/flat.mutations.resolvers';
+import { FlatQueriesResolver } from './resolvers/flat.queries.resolvers';
 
 @Module({
   imports: [
@@ -15,7 +16,12 @@ import { FlatMutationResolver } from './resolvers/flat.mutations.resolvers';
     forwardRef(() => FlatImageModule),
     forwardRef(() => LessorModule),
   ],
-  providers: [FlatService, LessorEvent, FlatMutationResolver],
+  providers: [
+    FlatService,
+    LessorEvent,
+    FlatMutationResolver,
+    FlatQueriesResolver,
+  ],
   exports: [FlatService],
 })
 export class FlatModule {}
