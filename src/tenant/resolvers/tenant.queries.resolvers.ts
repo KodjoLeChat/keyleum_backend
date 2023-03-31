@@ -17,4 +17,10 @@ export class TenantQueriesResolver {
     const tenants = await this.tenantService.getAllTenants();
     return tenants;
   }
+
+  @Query(() => Tenant, { nullable: true })
+  async tenantByUuid(@Args('uuid') uuid: string) {
+    const tenant = await this.tenantService.getTenantByUuid(uuid);
+    return tenant;
+  }
 }

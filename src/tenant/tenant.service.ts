@@ -18,7 +18,7 @@ export class TenantService {
     private readonly tenantRepository: Repository<Tenant>,
   ) {}
 
-  async getById(id: string): Promise<Tenant> {
+  private async getById(id: string): Promise<Tenant> {
     const tenant = await this.tenantRepository
       .createQueryBuilder('tenant')
       .where('id = :id AND state <> :state', {
@@ -28,6 +28,18 @@ export class TenantService {
       .getOne();
     return tenant;
   }
+
+  private async getByUuid(uuid: string): Promise<Tenant> {
+    const tenant = await this.tenantRepository
+      .createQueryBuilder('tenant')
+      .where('uuid = :uuid AND state <> :state', {
+        uuid: uuid,
+        state: UserState.deleted,
+      })
+      .getOne();
+    return tenant;
+  }
+
   async createTenant(input: TenantCreateInput): Promise<Tenant> {
     const tenant = this.tenantRepository.create(input);
     const exists = await FirebaseService.userExists(tenant.uuid);
@@ -76,6 +88,11 @@ export class TenantService {
 
   async getTenant(id: string): Promise<Tenant> {
     const tenant = await this.getById(id);
+    return tenant;
+  }
+
+  async getTenantByUuid(uuid: string): Promise<Tenant> {
+    const tenant = await this.getByUuid(uuid);
     return tenant;
   }
 

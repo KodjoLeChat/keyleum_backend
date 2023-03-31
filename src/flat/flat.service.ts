@@ -97,11 +97,33 @@ export class FlatService {
     return flats;
   }
 
+  async findAll(page = 1, perPage = 20): Promise<Flat[]> {
+    const flats = await this.flatRepository
+      .createQueryBuilder('flat')
+      .where('flat.state <> :state', { state: FlatState.deleted })
+      .skip((page - 1) * perPage)
+      .take(perPage)
+      .getMany();
+
+    return flats;
+  }
+
   async getFlatsByLessorId(lessorId: string): Promise<Flat[]> {
     const flats = await this.flatRepository
       .createQueryBuilder('flat')
       .where('flat.lessorId = :lessorId AND flat.state <> :state', {
         lessorId: lessorId,
+        state: FlatState.deleted,
+      })
+      .getMany();
+    return flats;
+  }
+
+  async getFlatsByOrganisationId(organisationId: string): Promise<Flat[]> {
+    const flats = await this.flatRepository
+      .createQueryBuilder('flat')
+      .where('flat.organisationId = :organisationId AND flat.state <> :state', {
+        organisationId: organisationId,
         state: FlatState.deleted,
       })
       .getMany();

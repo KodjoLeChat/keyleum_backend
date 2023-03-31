@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FlatModule } from 'src/flat/flat.module';
 import { LessorModule } from 'src/lessor/lessor.module';
 import { Organisation } from './models/organisation.model';
 import { OrganisationService } from './organisation.service';
@@ -10,6 +11,7 @@ import { OrganisationQueriesResolver } from './resolvers/organisation.queries.re
   imports: [
     TypeOrmModule.forFeature([Organisation]),
     forwardRef(() => LessorModule),
+    forwardRef(() => FlatModule),
   ],
   providers: [
     OrganisationService,
