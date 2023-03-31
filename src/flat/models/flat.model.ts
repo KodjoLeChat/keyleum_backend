@@ -5,12 +5,11 @@ import { FlatImages } from 'src/flat_image/models/flat_image.model';
 import { Lessor } from 'src/lessor/models/lessor.model';
 import { Organisation } from 'src/organisation/models/organisation.model';
 import { Node } from 'src/pagination/models/node.model';
-import { Tenant } from 'src/tenant/models/tenant.model';
+import { View } from 'src/view/models/view.model';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   RelationId,
@@ -85,6 +84,6 @@ export class Flat extends Node {
   @RelationId((self: Flat) => self.organisation)
   readonly organisationId: Lessor['id'];
 
-  @ManyToMany(() => Tenant, (tenant) => tenant.flats)
-  tenants?: Tenant[];
+  @OneToMany(() => View, (view) => view.flat)
+  views: View[];
 }

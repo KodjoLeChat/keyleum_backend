@@ -76,7 +76,7 @@ type Lessor {
   status: LessorStatus!
   organisationId: String
   flats: [Flat!]
-  organisation: Organisation
+  organisation: Organisation!
 }
 
 enum Gender {
@@ -118,6 +118,18 @@ type Tenant {
   state: UserState!
 }
 
+type View {
+  id: ID!
+  version: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  viewedAt: DateTime!
+  tenant: Tenant
+  flatId: String!
+  tenantId: String!
+  flat: Flat!
+}
+
 type Flat {
   id: ID!
   version: Int!
@@ -137,6 +149,7 @@ type Flat {
   lessorId: String!
   organisationId: String!
   images: [FlatImages!]
+  views: [View!]
 }
 
 enum PaimentType {
@@ -193,6 +206,7 @@ type Mutation {
   insert_organisation(organisation: OrganisationInsertInput!, lessor: LessorCreateInput!): Organisation!
   update_organisation(id: String!, input: OrganisationUpdateInput!): Organisation
   insert_flat(lessorId: String!, input: FlatInsertInput!): Flat
+  insert_view(input: ViewCreateInput!): View!
   insert_tenant(input: TenantCreateInput!): Tenant
   update_tenant(id: String!, input: TenantUpdateInput!): Tenant
   delete_tenant(id: String!): Tenant
@@ -259,6 +273,12 @@ input FlatInsertInput {
   startAt: String!
   endAt: String
   images: [String!]!
+}
+
+input ViewCreateInput {
+  viewedAt: DateTime!
+  flatId: String!
+  tenantId: String!
 }
 
 input TenantCreateInput {

@@ -8,6 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { FlatImageService } from 'src/flat_image/flat_image.service';
 import { FlatImages } from 'src/flat_image/models/flat_image.model';
+import { View } from 'src/view/models/view.model';
+import { ViewService } from 'src/view/view.service';
 import { FlatService } from '../flat.service';
 import { Flat } from '../models/flat.model';
 
@@ -16,6 +18,7 @@ export class FlatQueriesResolver {
   constructor(
     private readonly flatService: FlatService,
     private readonly flatImageService: FlatImageService,
+    private readonly viewService: ViewService,
   ) {}
 
   @Query(() => Flat, { nullable: true })
@@ -39,5 +42,14 @@ export class FlatQueriesResolver {
     }
     const images = await this.flatImageService.getImagesByFlatId(flat.id);
     return images;
+  }
+
+  @ResolveField(() => [View], { nullable: true })
+  async views(@Parent() flat: Flat) {
+    if (!flat) {
+      return null;
+    }
+    const views = await this.viewService.getViewsByFlat(flat);
+    return views;
   }
 }

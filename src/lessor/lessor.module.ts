@@ -7,7 +7,6 @@ import { FlatImageModule } from 'src/flat_image/flat_image.module';
 import { OrganisationModule } from 'src/organisation/organisation.module';
 import { LessorService } from './lessor.service';
 import { Lessor } from './models/lessor.model';
-import { LessorFieldsResolver } from './resolvers/lessor.fields.resolvers';
 import { LessorMutationsResolver } from './resolvers/lessor.mutations.resolvers';
 import { LessorQueriesResolver } from './resolvers/lessor.queries.resolvers';
 
@@ -23,7 +22,6 @@ import { LessorQueriesResolver } from './resolvers/lessor.queries.resolvers';
     FlatService,
     LessorMutationsResolver,
     LessorQueriesResolver,
-    LessorFieldsResolver,
     LessorEvent,
   ],
   exports: [LessorService],
