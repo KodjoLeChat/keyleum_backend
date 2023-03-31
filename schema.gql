@@ -38,6 +38,7 @@ type Organisation {
   type: OrganisationType!
   state: OrganisationState!
   lessors: [Lessor!]
+  flats: [Flat!]
 }
 
 enum OrganisationType {
@@ -176,10 +177,11 @@ type Query {
   lessors: [Lessor!]!
   organisation(id: String!): Organisation
   organisations: [Organisation!]!
+  flat(id: String!): Flat
+  flats(page: Int!, perPage: Int!): [Flat!]!
   tenant(id: String!): Tenant
   tenants: [Tenant!]!
-  flat(id: String!): Flat
-  flats: [Flat!]!
+  tenantByUuid(uuid: String!): Tenant
   organisation_code(organisationId: String!): OrganisationCode
   organisation_codes: [OrganisationCode!]!
 }
@@ -190,10 +192,10 @@ type Mutation {
   delete_lessor(id: String!): Lessor
   insert_organisation(organisation: OrganisationInsertInput!, lessor: LessorCreateInput!): Organisation!
   update_organisation(id: String!, input: OrganisationUpdateInput!): Organisation
+  insert_flat(lessorId: String!, input: FlatInsertInput!): Flat
   insert_tenant(input: TenantCreateInput!): Tenant
   update_tenant(id: String!, input: TenantUpdateInput!): Tenant
   delete_tenant(id: String!): Tenant
-  insert_flat(lessorId: String!, input: FlatInsertInput!): Flat
 }
 
 input LessorCreateInput {
@@ -246,6 +248,19 @@ input OrganisationUpdateInput {
   whatsAppNumber: String
 }
 
+input FlatInsertInput {
+  address: String!
+  city: String!
+  quarter: String!
+  price: Int!
+  paimentType: PaimentType!
+  title: String!
+  description: String
+  startAt: String!
+  endAt: String
+  images: [String!]!
+}
+
 input TenantCreateInput {
   firstName: String!
   lastName: String!
@@ -267,17 +282,4 @@ input TenantUpdateInput {
   address: String
   city: String!
   profileLink: String
-}
-
-input FlatInsertInput {
-  address: String!
-  city: String!
-  quarter: String!
-  price: Int!
-  paimentType: PaimentType!
-  title: String!
-  description: String
-  startAt: String!
-  endAt: String
-  images: [String!]!
 }

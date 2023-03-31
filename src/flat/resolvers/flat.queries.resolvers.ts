@@ -1,4 +1,11 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { FlatImageService } from 'src/flat_image/flat_image.service';
 import { FlatImages } from 'src/flat_image/models/flat_image.model';
 import { FlatService } from '../flat.service';
@@ -18,8 +25,11 @@ export class FlatQueriesResolver {
   }
 
   @Query(() => [Flat])
-  async flats() {
-    return await this.flatService.getAllFlat();
+  async flats(
+    @Args('page', { type: () => Int }) page: number,
+    @Args('perPage', { type: () => Int }) perPage: number,
+  ) {
+    return await this.flatService.findAll(page, perPage);
   }
 
   @ResolveField(() => [FlatImages], { nullable: true })

@@ -1,4 +1,6 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { FlatService } from 'src/flat/flat.service';
+import { Flat } from 'src/flat/models/flat.model';
 import { LessorService } from 'src/lessor/lessor.service';
 import { Lessor } from 'src/lessor/models/lessor.model';
 import { Organisation } from '../models/organisation.model';
@@ -9,6 +11,7 @@ export class OrganisationQueriesResolver {
   constructor(
     private readonly organisationService: OrganisationService,
     private readonly lessorService: LessorService,
+    private readonly flatService: FlatService,
   ) {}
 
   @Query(() => Organisation, { nullable: true })
@@ -28,5 +31,12 @@ export class OrganisationQueriesResolver {
     const { id } = organisation;
     const lessors = await this.lessorService.getAllLessorByOrganisationId(id);
     return lessors;
+  }
+
+  @ResolveField(() => [Flat], { nullable: true })
+  async flats(@Parent() organisation: Organisation) {
+    const { id } = organisation;
+    const flats = await this.flatService.getFlatsByOrganisationId(id);
+    return flats;
   }
 }
